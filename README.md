@@ -42,4 +42,4 @@
 
 ## Примерный вид системы
 
-![System](./system.png)
+![System](./.data/system.png)

@@ -1,0 +1,78 @@
+plugins {
+    id 'java'
+    id 'application'
+
+    id 'org.springframework.boot' version '3.0.2'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+repositories {
+    mavenCentral()
+}
+
+
+def robotModule = project(':modules:robot')
+def harmonistModule = project(':modules:harmonist')
+
+configure([robotModule, harmonistModule]) {
+    apply(plugin: 'java')
+    apply(plugin: 'idea')
+    apply(plugin: 'application')
+    apply(plugin: 'io.spring.dependency-management')
+    apply(plugin: 'org.springframework.boot')
+
+    dependencyManagement {
+        imports {
+            mavenBom 'org.springframework.boot:spring-boot-dependencies:2.5.4'
+        }
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        implementation 'org.jetbrains:annotations:23.0.0'
+        compileOnly 'org.projectlombok:lombok:1.18.24'
+        annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+        implementation 'org.springframework.boot:spring-boot-starter'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+        implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+        implementation 'io.springfox:springfox-boot-starter:3.0.0'
+
+        developmentOnly 'org.springframework.boot:spring-boot-devtools'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+        testImplementation 'net.bytebuddy:byte-buddy:1.12.20'
+        testImplementation 'org.junit.jupiter:junit-jupiter'
+        testImplementation 'org.mockito:mockito-inline:4.10.0'
+        testImplementation 'org.mockito:mockito-junit-jupiter:4.10.0'
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
+
+configure([harmonistModule]) {
+    dependencies {
+        implementation project(':modules:robot')
+    }
+}
+
+dependencies {
+    implementation robotModule
+    implementation harmonistModule
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+}
+
+tasks.create("unitTests").configure {
+    dependsOn(robotModule.test)
+    dependsOn(harmonistModule.test)
+}
