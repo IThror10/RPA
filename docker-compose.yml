@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  data-base:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=rpa-DB
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_MAX_CONNECTIONS=2000
+    ports:
+      - "7777:5432"
+    volumes:
+      - ./modules/harmonist/src/main/sql/create_database.sql:/docker-entrypoint-initdb.d/01_init.sql
+      - ./modules/harmonist/src/main/sql/insert_database.sql:/docker-entrypoint-initdb.d/02_insert_values.sql
