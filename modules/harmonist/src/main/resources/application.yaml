@@ -10,6 +10,9 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 springdoc:
   swagger-ui:
     path: /swagger/src
@@ -18,3 +21,5 @@ springdoc:
 token:
   signing:
     key: 53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855
+  robot:
+      secret: SomeStringWithAuthenticationKey

@@ -42,9 +42,8 @@ public class SecurityConfig {
                     return corsConfiguration;
                 }))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/user/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/robot/admin").hasRole("admin")
-                        .requestMatchers(HttpMethod.GET, "/api/robot/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/user/login", "/api/user", "/api/robot").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/robot").permitAll()
                         .requestMatchers("/swagger/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))

@@ -1,6 +1,6 @@
 package com.RPA.service;
 
-import com.RPA.entity.Role;
+import com.RPA.entity.num.UserRole;
 import com.RPA.entity.User;
 import com.RPA.request.AuthorizeUserRequest;
 import com.RPA.request.RegisterUserRequest;
@@ -27,11 +27,10 @@ public class AuthenticationService {
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
                 .phone(request.phone())
-                .role(Role.ROLE_USER)
+                .role(UserRole.ROLE_USER)
                 .build();
 
         userService.create(user);
-
         String jwt = jwtService.generateToken(user);
         return new UserTokenResponse(new UserInfoResponse(user), jwt);
     }

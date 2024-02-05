@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Schema(description = "Ответ c токеном доступа")
 public record UserTokenResponse (
+        @Schema(implementation = UserInfoResponse.class)
         UserInfoResponse userData,
 
         @Schema(description = "Токен доступа", example = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTYyMjUwNj...")

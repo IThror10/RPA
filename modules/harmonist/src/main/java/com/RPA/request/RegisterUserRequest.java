@@ -1,11 +1,10 @@
 package com.RPA.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Null;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Size;
 
 @Schema(description = "Запрос на регистрацию")
 public record RegisterUserRequest(

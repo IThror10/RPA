@@ -1,4 +1,3 @@
 rootProject.name = 'RPA'
 
-include(':modules:robot')
 include(':modules:harmonist')
