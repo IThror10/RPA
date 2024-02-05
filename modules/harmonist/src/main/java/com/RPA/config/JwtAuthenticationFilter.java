@@ -1,6 +1,7 @@
 package com.RPA.config;
 
 
+import com.RPA.entity.User;
 import com.RPA.service.JwtService;
 import com.RPA.service.UserService;
 import jakarta.servlet.FilterChain;
@@ -45,9 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String username = jwtService.extractUserName(jwt);
 
         if (StringUtils.isNotEmpty(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userService
-                    .userDetailsService()
-                    .loadUserByUsername(username);
+            User userDetails = userService.getByUsername(username);
 
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
@@ -61,6 +60,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 context.setAuthentication(authToken);
                 SecurityContextHolder.setContext(context);
+
+                request.setAttribute("uid", userDetails.getId());
             }
         }
         filterChain.doFilter(request, response);

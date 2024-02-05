@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS users (
     email       varchar NOT NULL UNIQUE,
     password    varchar NOT NULL,
     phone       varchar NULL UNIQUE,
-    role        varchar NOT NULL DEFAULT ('user')
+    role        varchar NOT NULL DEFAULT ('ROLE_USER')
 );
 
 CREATE TABLE IF NOT EXISTS groups (
@@ -14,24 +14,31 @@ CREATE TABLE IF NOT EXISTS groups (
     description text NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS participants (
+CREATE TABLE IF NOT EXISTS members (
     user_id     integer REFERENCES users (id),
     group_id    integer REFERENCES groups (id),
-    status      integer NOT NULL,
+    status      smallint NOT NULL,
 
     PRIMARY KEY (user_id, group_id)
 );
 
+CREATE TABLE IF NOT EXISTS robots (
+    id          serial PRIMARY KEY,
+    ver         varchar NOT NULL CHECK (ver ~ '^\\d+\\.\\d+$') UNIQUE,
+    ver_from    varchar NOT NULL CHECK (ver_from ~ '^\\d+\\.\\d+$'),
+    help        text NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS scripts (
     id          serial  PRIMARY KEY,
     code        text NOT NULL,
-    name        varchar NOT NULL,
+    name        varchar NOT NULL UNIQUE,
     description text NOT NULL,
     input_data  jsonb NOT NULL,
 
-    version     varchar NOT NULL,
-    created     timestamp,
+    version     varchar NOT NULL REFERENCES robots (ver),
+    os          varchar NOT NULL,
+    created     timestamp NOT NULL,
     creator     integer REFERENCES users (id)
 );
 
@@ -47,14 +54,4 @@ CREATE TABLE IF NOT EXISTS executors (
     script_id   integer REFERENCES scripts (id),
 
     PRIMARY KEY (group_id, script_id)
-);
-
-CREATE TABLE IF NOT EXISTS actions (
-    user_id     integer REFERENCES users (id),
-    script_id   integer REFERENCES scripts (id),
-    time_begin  timestamp NOT NULL,
-    time_exec   timestamp DEFAULT (NULL),
-    input_data  varchar NULL,
-
-    PRIMARY KEY (user_id, script_id, time_begin, time_exec)
 );
