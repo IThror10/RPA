@@ -38,7 +38,7 @@ public class ExceptionHandleController {
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity handleRuntimeException(RuntimeException ex) {
-        return createBody("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+        return createBody("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private ResponseEntity createBody(String error, HttpStatus status) {

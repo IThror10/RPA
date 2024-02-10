@@ -24,8 +24,8 @@ CREATE TABLE IF NOT EXISTS members (
 
 CREATE TABLE IF NOT EXISTS robots (
     id          serial PRIMARY KEY,
-    ver         varchar NOT NULL CHECK (ver ~ '^\\d+\\.\\d+$') UNIQUE,
-    ver_from    varchar NOT NULL CHECK (ver_from ~ '^\\d+\\.\\d+$'),
+    ver         varchar NOT NULL UNIQUE,
+    ver_from    varchar NOT NULL,
     help        text NOT NULL
 );
 

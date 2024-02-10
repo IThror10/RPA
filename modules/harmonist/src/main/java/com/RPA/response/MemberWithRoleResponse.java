@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @Schema(description = "Пользователи группы")
 public class MemberWithRoleResponse {
-    @Schema(description = "Информация о пользователе", implementation = GroupResponse.class)
+    @Schema(description = "Информация о пользователе", implementation = UserInfoResponse.class)
     UserInfoResponse userInfoResponse;
     @Schema(description = "Роль пользователя", example = "LEADER")
     GroupRole groupRole;

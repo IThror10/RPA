@@ -12,7 +12,7 @@ public record UpdateScriptRequest(
         @Schema(description = "Описание скрипта", example = "Перевод текста")
         String description,
 
-        @Schema(description = "Входящие параметры", example = "[\"name1\" : {\"type\" : \"type1\", \"value\" : \"someValue\"}, ...]")
+        @Schema(description = "Входящие параметры", example = "[{\"name1\" : \"X\", \"type\" : \"integer\", \"value\" : 0.5}, ...]")
         JsonNode inputData,
 
         @Schema(description = "Версия скрипта", example = "0.1")

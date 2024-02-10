@@ -14,3 +14,19 @@ services:
     volumes:
       - ./modules/harmonist/src/main/sql/create_database.sql:/docker-entrypoint-initdb.d/01_init.sql
       - ./modules/harmonist/src/main/sql/insert_database.sql:/docker-entrypoint-initdb.d/02_insert_values.sql
+#    networks:
+#      - backend-net
+
+#  harmonist:
+#    build:
+#      context: .
+#      dockerfile: ./config/harmonist.dockerfile
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - data-base
+#    networks:
+#      - backend-net
+#
+#networks:
+#  backend-net:

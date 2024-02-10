@@ -15,7 +15,4 @@ public interface UserRepository extends CrudRepository<User, Long> {
     boolean existsByPhone(String phone);
 
     List<User> findFirst7ByUsernameStartsWithOrderByUsername(String usernameStartsWith);
-
-//    @Query("select e from Employees e where e.salary > :salary")
-//    List<Employees> findEmployeesWithMoreThanSalary(@Param("salary") Long salary, Sort sort);
 }

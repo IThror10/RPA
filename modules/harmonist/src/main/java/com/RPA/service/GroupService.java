@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -148,5 +149,9 @@ public class GroupService {
     private Group getGroupById(Long gid) {
         Group group = groupRepository.findById(gid).orElseThrow(() -> new NotFoundException("Group not found"));
         return group;
+    }
+
+    public Set<Long> getUserMembership(Long userId) {
+        return memberRepository.findGroupsByUserId(userId);
     }
 }

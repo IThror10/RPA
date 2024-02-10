@@ -21,7 +21,7 @@ public interface MemberRepository extends CrudRepository<Member, UserGroupId> {
     List<GroupWithRoleResponse> findUserMembershipById(@Param("userId") Long userId);
 
     @Query("SELECT new com.RPA.response.MemberWithRoleResponse" +
-            "(m.user.username, m.user.phone, m.user.role, m.role) FROM Member m WHERE m.group.id = :groupId")
+            "(m.user.username, m.user.phone, m.user.email, m.role) FROM Member m WHERE m.group.id = :groupId")
     List<MemberWithRoleResponse> findMembersByGroupId(@Param("groupId") Long groupId);
 
     @Query("SELECT m.group.id FROM Member m WHERE m.user.id = :userId")
