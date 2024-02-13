@@ -62,7 +62,11 @@ class State:
         print(results)
         if len(results) == 0:
             raise ValueError(f"cannot find word {word} on the screen")
-        return results[0][0][0][0] / width, results[0][0][0][1] / height, results[0][0][2][0] / width, results[0][0][2][1] / height
+        return \
+            results[0][0][0][0] / width, \
+            results[0][0][0][1] / height, \
+            results[0][0][2][0] / width, \
+            results[0][0][2][1] / height
 
 
     def get_func(self, name):
@@ -116,6 +120,11 @@ class State:
                 pyautogui.keyUp('q')
                 pyautogui.keyUp('command')
                 time.sleep(10)
+        elif SYSTEM == "Windows":
+            with pyautogui.hold("alt"):
+                for _ in range(len(self.windows)):
+                    pyautogui.press('f4')
+                    time.sleep(10)
         self.windows = []
 
     def switch_to_window(self, window):
@@ -123,10 +132,10 @@ class State:
             index = self.windows.index(window)
         except ValueError:
             raise ValueError(f"unknown window: {window}")
-        if SYSTEM == "Darwin":
-            with pyautogui.hold('command'):
-                time.sleep(0.5)
-                for i in range(len(self.windows) - index - 1):
-                    pyautogui.press('tab')
+        key = 'cmd' if SYSTEM == "Darwin" else 'alt'
+        with pyautogui.hold(key):
+            time.sleep(0.5)
+            for i in range(len(self.windows) - index - 1):
+                pyautogui.press('tab')
         self.windows.pop(index)
         self.windows.append(window)

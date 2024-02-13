@@ -2,7 +2,7 @@ from flask import jsonify, Blueprint, request
 
 from . import main_state
 from .interpreter import Interpreter
-from .utils import get_screenshot, get_binary_image, get_binary_file
+from .utils import get_screenshot, get_binary_image, get_binary_file, is_float
 
 
 main_blueprint = Blueprint('main', __name__)
@@ -32,10 +32,43 @@ def execute():
     input_variables = request_args['input']
     video_flag = request_args['videoFlag']
     for variable in input_variables:
-        if variable['type'].lower() == 'image':
-            main_state.add_image(variable['name'], variable['value'])
+        if variable["type"].lower() == 'image':
+            try:
+                main_state.add_image(variable['name'], variable['value'])
+            except:
+                return jsonify({
+                    "message": "input error",
+                    "error": f"error while processing image {variable['name']}"
+                }), 400
+        elif variable["type"] == 'integer':
+            if isinstance(variable["value"], int):
+                main_state.add_variable(variable["name"], variable["name"])
+            else:
+                return jsonify({
+                    "message": "input error",
+                    "error": f"wrong value for integer type in variable {variable['name']}"
+                }), 400
+        elif variable['type'] == 'bool':
+            if isinstance(variable['value'], bool):
+                main_state.add_variable(variable["name"], variable["value"])
+            else:
+                return jsonify({
+                    "message": "input error",
+                    "error": f"wrong value for boolean type in variable {variable['name']}"
+                }), 400
+        elif variable["type"] == "float":
+            if is_float(variable["value"]) or isinstance(variable["value"], int):
+                main_state.add_variable(variable["name"], variable["value"])
+            else:
+                return jsonify({
+                    "message": "input error",
+                    "error": f"wrong value for float type in variable {variable['name']}"
+                }), 400
         else:
-            main_state.init_variable(variable['name'], variable['value'])
+            return jsonify({
+                "message": "input error",
+                "error": f"unknown type {variable['type']}"
+            }), 400
     try:
         interpreter = Interpreter(code)
     except ValueError as e:
