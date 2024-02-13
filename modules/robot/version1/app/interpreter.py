@@ -1,5 +1,6 @@
-from .commands import *
-from . import main_state
+from version1.app.utils import get_screenshot
+from version1.app.commands import *
+
 
 command_to_class = {
     "press": PressCommand,
@@ -24,7 +25,7 @@ class Interpreter:
         errors = []
         n = len(commands)
         for i in range(n):
-            args = commands[i].split(' ')
+            args = re.findall(r'[^" ]+|"[^"]*"', commands[i])
             args = list(filter(lambda x: len(x) > 0, args))
 
             if len(args) == 0 or args[0].strip().startswith('#'):
@@ -39,7 +40,9 @@ class Interpreter:
             if args[0].lower() == 'def':
                 if len(args) != 2:
                     errors.append(f'Line {line + n - i}: error in function declaration')
+                print("def", args[1], block)
                 try:
+                    print('\n'.join(block[::-1]))
                     command = Interpreter('\n'.join(block[::-1]), line=n-i)
                     main_state.init_func(args[1], command)
                 except ValueError as e:
@@ -68,10 +71,20 @@ class Interpreter:
         self.has_error = False
         self.command = prev
 
-    def execute(self):
+    def execute(self, video_flag=False):
+        video = []
         if not self.has_error:
             curr = self.command
             while curr is not None:
                 curr()
+                print(curr)
+                if video_flag:
+                    width, height, image = get_screenshot()
+                    video.append({
+                        "width": width,
+                        "height": height,
+                        "image": image
+                    })
+                print(curr)
                 curr = curr.next_command
-            main_state.clear_funcs()
+        return video

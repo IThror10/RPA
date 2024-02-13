@@ -2,9 +2,9 @@ import pyautogui
 import pyperclip
 import time
 
-from .utils import prepare_int, prepare_string, prepare_float, prepare_key
-from .command import Command
-from . import main_state
+from version1.app.utils import prepare_int, prepare_string, prepare_float, prepare_key, prepare_value, check_variable
+from version1.app.command import Command
+from version1.app import main_state
 
 
 WIDTH, HEIGHT = pyautogui.size()
@@ -97,24 +97,27 @@ class AssignmentCommand(Command):
         super().__init__(next_command)
         if len(args) != 3:
             raise ValueError("wrong arguments for assignment operator")
+        check_variable(args[0])
         self.variable = args[0]
-        self.value = args[-1]
+        self.value = prepare_value(args[-1])
 
     def __call__(self):
-        main_state.init_variable(self.variable, self.value)
+        main_state.init_variable(self.variable, self.value())
 
 
 class OutputCommand(Command):
     def __init__(self, next_command, args):
         super().__init__(next_command)
+        if len(args) == 0:
+            raise ValueError("missing arguments for output")
         if len(args) != 1 and len(args) != 2:
-            print(len(args))
             raise ValueError("wrong arguments' number for output")
+        self.value = prepare_value(args[1]) if len(args) == 2 else lambda: None
         self.name = args[0]
-        self.variable = args[1] if len(args) == 2 else None
+        check_variable(self.name)
 
     def __call__(self):
-        main_state.add_result(self.name, self.variable)
+        main_state.add_result(self.name, self.value())
 
 
 class SleepCommand(Command):
@@ -134,6 +137,7 @@ class PutCommand(Command):
         if len(args) != 2:
             raise ValueError("wrong arguments' number for put")
         self.variable = args[1]
+        check_variable(self.variable)
 
     def __call__(self):
         main_state.init_variable(self.variable, pyperclip.paste().splitlines()[-1])
