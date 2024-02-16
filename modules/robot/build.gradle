@@ -1,7 +1,0 @@
-application {
-    mainClass = 'com.RPA.RobotMain'
-}
-
-bootRun.configure {
-    mainClass = 'com.RPA.RobotMain'
-}
